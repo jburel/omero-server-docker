@@ -35,12 +35,14 @@ jobs:
           MAJOR=`echo $base | sed -e "s#$RE#\1#"`
           MINOR=`echo $base | sed -e "s#$RE#\2#"`
           PATCH=`echo $base | sed -e "s#$RE#\3#"`
-          if [ $base > $base_repo ] ; then
+          A="$(cut -d'-' -f1 <<<"$base_repo")"
+          B="$(cut -d'-' -f2 <<<"$base")"
+          if [ $B > $A ] ; then
             value="${{ steps.getprefix.outputs.prefix }}latest"
             value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR"
             value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR"
             value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR.$PATCH"
-          elif [ $base > $MAJOR_REPO ]; then
+          elif [ $B > $MAJOR_REPO ]; then
             value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR"
             value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR"
             value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR.$PATCH"
