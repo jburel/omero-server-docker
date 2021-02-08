@@ -28,14 +28,25 @@ jobs:
         run: |
           RE='[^0-9]*\([0-9]*\)[.]\([0-9]*\)[.]\([0-9-]*\)\([0-9A-Za-z-]*\)'
           base_repo=$(git tag 2>/dev/null| tail -n 1)
+          MAJOR_REPO=`echo $base_repo | sed -e "s#$RE#\1#"`
+          MINOR_REPO=`echo $base_repo | sed -e "s#$RE#\2#"`
+          PATCH_REPO=`echo $base_repo | sed -e "s#$RE#\3#"`
           base="5.6.5-1"
           MAJOR=`echo $base | sed -e "s#$RE#\1#"`
           MINOR=`echo $base | sed -e "s#$RE#\2#"`
           PATCH=`echo $base | sed -e "s#$RE#\3#"`
-          value="${{ steps.getprefix.outputs.prefix }}latest"
-          value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR"
-          value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR"
-          value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR.$PATCH"
+          if [ $base > $base_repo ] ; then
+            value="${{ steps.getprefix.outputs.prefix }}latest"
+            value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR"
+            value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR"
+            value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR.$PATCH"
+          elif [ $base > $MAJOR_REPO ]; then
+            value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR"
+            value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR"
+            value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR.$PATCH"
+          elif [ $base > $MINOR_REPO ]; then
+            value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR.$PATCH"
+          fi
           echo "$value"
           echo "$base_repo"
           echo "::set-output name=tags::$value"
