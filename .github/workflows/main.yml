@@ -12,8 +12,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Test
-        run: ./test.sh
+        with:
+          fetch-depth: 0
+      - name: Get prefix
+        id: getprefix
+        run: |
+          if [ ! -z ${{ env.name }} ]; then
+            echo "::set-output name=prefix::${{ github.actor }}/${{ env.name }}:"
+          else
+            echo "::set-output name=prefix::${{ github.repository }}/${{ github.event.repository.name }}:"
+          fi
+          echo "${{ github.repository }}/${{ github.event.repository.name }}"
+      - name: Get tags
+        id: gettags
+        run: |
+          RE='[^0-9]*\([0-9]*\)[.]\([0-9]*\)[.]\([0-9-]*\)\([0-9A-Za-z-]*\)'
+          base_repo=$(git tag 2>/dev/null| tail -n 1)
+          base="5.6.5-1"
+          MAJOR=`echo $base | sed -e "s#$RE#\1#"`
+          MINOR=`echo $base | sed -e "s#$RE#\2#"`
+          PATCH=`echo $base | sed -e "s#$RE#\3#"`
+          value="${{ steps.getprefix.outputs.prefix }}latest"
+          value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR"
+          value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR"
+          value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR.$MINOR.$PATCH"
+          echo "$value"
+          echo "$base_repo"
+          echo "::set-output name=tags::$value"
   upload:
     needs: build
     if: startsWith(github.ref, 'refs/tags')
