@@ -36,7 +36,9 @@ jobs:
           MINOR=`echo $base | sed -e "s#$RE#\2#"`
           PATCH=`echo $base | sed -e "s#$RE#\3#"`
           A="$(cut -d'-' -f1 <<<"$base_repo")"
-          B="$(cut -d'-' -f2 <<<"$base")"
+          B="$(cut -d'-' -f1 <<<"$base")"
+          echo $B
+          echo $A
           if [ $B > $A ] ; then
             value="${{ steps.getprefix.outputs.prefix }}latest"
             value="$value,${{ steps.getprefix.outputs.prefix }}$MAJOR"
