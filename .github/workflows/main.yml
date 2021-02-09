@@ -54,6 +54,7 @@ jobs:
           echo "$value"
           echo "$base_repo"
           echo "::set-output name=tags::$value"
+          dpkg --compare-versions $base "gt" $base_repo
   upload:
     needs: build
     if: startsWith(github.ref, 'refs/tags')
