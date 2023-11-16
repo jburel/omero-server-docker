@@ -20,11 +20,11 @@ fi
 cleanup || true
 
 
-#docker build -t $IMAGE  .
-make VERSION="$PREFIX" REPO="$REPO" docker-build
+docker build -t $IMAGE  .
 
 docker run -d --name $PREFIX-db -e POSTGRES_PASSWORD=postgres postgres:14
 
+echo "RUN"
 # Check both CONFIG_environment and *.omero config mounts work
 docker run --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:rw --cgroupns=host -d --name $PREFIX-server --link $PREFIX-db:db \
     -p 4064 \
