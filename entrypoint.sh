@@ -1,4 +1,4 @@
-#!/usr/local/bin/dumb-init /sbin/init /bin/bash
+#!/usr/local/bin/dumb-init /usr/sbin/init /bin/bash
 
 set -e
 source /opt/omero/server/venv3/bin/activate
