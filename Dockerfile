@@ -1,4 +1,4 @@
-FROM eniocarboni/docker-rockylinux-systemd:latest
+FROM eniocarboni/docker-rockylinux-systemd:9
 
 LABEL maintainer="ome-devel@lists.openmicroscopy.org.uk"
 
