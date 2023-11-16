@@ -37,4 +37,4 @@ USER omero-server
 EXPOSE 4063 4064
 VOLUME ["/OMERO", "/opt/omero/server/OMERO.server/var"]
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["/usr/local/bin/entrypoint.sh"]
