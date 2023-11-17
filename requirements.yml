@@ -4,17 +4,7 @@
   src: https://github.com/pwalczysko/ansible-role-basedeps/
   version: fix-repo-rhel
 
-- name: ome.ice
-  version: 4.3.0
-
-- name: ome.java
-  version: 2.2.0
-
-- name: ome.omero_common
-  version: 0.4.0
+- name: ome.postgresql
 
 - name: ome.omero_server
   version: 5.0.0
-
-- name: ome.postgresql_client
-  version: 0.3.0
